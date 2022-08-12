@@ -15,9 +15,11 @@ import { EXCEPTION_MESSAGES } from "../utils/exception-messages";
 import { useRouter } from "next/router";
 import PageTitle from "../components/page-title";
 import { useState } from "react";
+import useAuth from "../lib/hooks/useAuth";
 
 const Login: PageWithLayout = () => {
   const [loading, setLoading] = useState<boolean>(false);
+  const { setAuth } = useAuth() as any;
   const {
     register,
     handleSubmit,
@@ -35,7 +37,7 @@ const Login: PageWithLayout = () => {
     setLoading(true);
     const { email, password } = data;
     try {
-      await axios.post(
+      const response = await axios.post(
         `${API_AUTH}/login`,
         {
           email,
@@ -43,6 +45,8 @@ const Login: PageWithLayout = () => {
         },
         { skipAuthRefresh: true } as AxiosAuthRefreshRequestConfig
       );
+      const { accessToken, refreshToken, user } = response.data;
+      setAuth({ accessToken, refreshToken, user });
       router.push("/home");
     } catch (error: any) {
       let message = error?.message;
