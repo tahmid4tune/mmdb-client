@@ -1,0 +1,13 @@
+@media only screen and (max-width: 768px) {
+  .horizontalBar {
+    display: block;
+    width: 100vw;
+    position: relative;
+    left: calc(-50vw + 50%);
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .horizontalBar {
+  }
+}
