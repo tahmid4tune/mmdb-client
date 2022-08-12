@@ -14,8 +14,10 @@ import { AxiosAuthRefreshRequestConfig } from "axios-auth-refresh";
 import { EXCEPTION_MESSAGES } from "../utils/exception-messages";
 import { useRouter } from "next/router";
 import PageTitle from "../components/page-title";
+import { useState } from "react";
 
 const Login: PageWithLayout = () => {
+  const [loading, setLoading] = useState<boolean>(false);
   const {
     register,
     handleSubmit,
@@ -30,6 +32,7 @@ const Login: PageWithLayout = () => {
   });
   const router = useRouter();
   const onSubmit = async (data: LoginForm) => {
+    setLoading(true);
     const { email, password } = data;
     try {
       await axios.post(
@@ -51,6 +54,8 @@ const Login: PageWithLayout = () => {
             message: message || 'エラーが発生しました',
             variant: 'danger',
           })*/
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -89,7 +94,12 @@ const Login: PageWithLayout = () => {
             />
           </Col>
           <Col xs={12}>
-            <Button type="submit" variant="primary" className="w-100 fw-bold">
+            <Button
+              type="submit"
+              variant="primary"
+              className="w-100 fw-bold"
+              disabled={loading}
+            >
               Login
             </Button>
           </Col>
