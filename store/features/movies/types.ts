@@ -1,4 +1,5 @@
 import { API_CALL_STATUS } from "../../../utils/api-call-states";
+import { SortByPropertyEnum, SortTypeEnum } from "./enums";
 
 export interface AddMovieState {
   movieAddStatus: API_CALL_STATUS;
@@ -8,4 +9,15 @@ export interface AddMovieState {
 export interface AddMovieData {
   name: string;
   description: string;
+}
+
+export interface InitialFilterAndResultState {
+  name: string;
+  releaseYear: number;
+  maxRating: number;
+  minRating: number;
+  sortByProperty: SortByPropertyEnum;
+  order: SortTypeEnum;
+  page: number;
+  perPage: number;
 }

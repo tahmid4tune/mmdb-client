@@ -1,11 +1,4 @@
-import {
-  ComponentType,
-  Context,
-  createContext,
-  FC,
-  ReactNode,
-  useState,
-} from "react";
+import { createContext, ReactNode, useState } from "react";
 
 export interface ChildProps {
   children: ReactNode;

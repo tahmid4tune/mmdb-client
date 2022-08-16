@@ -20,7 +20,7 @@ const AuthorizedNavbar: FC = () => {
           >
             MMDB
           </Navbar.Brand>
-          <Button className="float-end" onClick={logout}>
+          <Button className="float-end" variant="danger" onClick={logout}>
             Logout
           </Button>
         </Container>

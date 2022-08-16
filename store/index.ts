@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import addMovieReducer from "./features/movies/addMovieSlice";
+import searchMoviesReducer from "./features/movies/searchMoviesSlice";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 
@@ -14,6 +15,7 @@ export const store = configureStore({
   reducer: {
     //  map: persistedMapReducer,
     addMovie: addMovieReducer,
+    searchMovie: searchMoviesReducer,
   },
   devTools: process.env.NEXT_PUBLIC_ENVIRONMENT !== "production",
 
