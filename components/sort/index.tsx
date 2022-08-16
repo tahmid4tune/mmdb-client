@@ -32,7 +32,6 @@ const Sort: FC<SortProps> = ({
           <Form.Select
             size={size}
             name="sort-by"
-            defaultValue={sortByCriteria[0]}
             value={sortByValue}
             onChange={onCriteriaSelect}
           >
@@ -49,7 +48,6 @@ const Sort: FC<SortProps> = ({
             size={size}
             name="sort-type"
             value={sortTypeValue}
-            defaultValue="ASC"
             onChange={onSortTypeSelect}
           >
             {sortTypes.map((type) => (

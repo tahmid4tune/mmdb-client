@@ -101,13 +101,17 @@ export const searchMoviesSlice = createSlice({
       state.movieSearchStatus = API_CALL_STATUS.PENDING;
     }),
       builder.addCase(getMovieListRequest.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.movieList = action.payload.resultForThisPage;
         state.totalNumberOfMovies = action.payload.total;
         state.movieSearchStatus = API_CALL_STATUS.SUCCESS;
       }),
-      builder.addCase(getMovieListRequest.rejected, (state) => {
+      builder.addCase(getMovieListRequest.rejected, (state, action) => {
         state.movieSearchStatus = API_CALL_STATUS.FAILED;
+        if (action?.payload) {
+          state.movieSearchError = (action.payload as any).errorMessage;
+        } else {
+          state.movieSearchError = action.error.message;
+        }
       });
   },
 });

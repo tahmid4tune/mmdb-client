@@ -30,7 +30,7 @@ const AddMovie: PageWithLayout = () => {
     if (!auth.user) {
       router.push("/login");
     }
-    console.log(auth)
+    console.log(auth);
 
     return () => {};
   });
@@ -53,7 +53,7 @@ const AddMovie: PageWithLayout = () => {
       await axiosAuthorized.post(`${API_MOVIES}/add`, data);
       router.push("/movies");
     } catch (error: any) {
-        console.log(error)
+      console.log(error);
       // EXCEPTION_MESSAGES.SOMETHING_WENT_WRONG
     } finally {
       setLoading(false);
@@ -62,7 +62,12 @@ const AddMovie: PageWithLayout = () => {
 
   return (
     <>
-      <PageTitle title="Add New Movie" textClassName="mt-5" showHorizontalBar backButton />
+      <PageTitle
+        title="Add New Movie"
+        textClassName="mt-5"
+        showHorizontalBar
+        backButton
+      />
       <Form onSubmit={handleSubmit(onSubmit)} ref={formRef}>
         <Row>
           <Col xs={12}>
@@ -97,14 +102,12 @@ const AddMovie: PageWithLayout = () => {
           </Col>
         </Row>
         {errors?.intro?.message && (
-            <Row>
-              <FormText
-                className={`w-100 mb-3 float-start text-danger font-12 `}
-              >
-                { errors?.intro?.message }
-              </FormText>
-            </Row>
-          )}
+          <Row>
+            <FormText className={`w-100 mb-3 float-start text-danger font-12 `}>
+              {errors?.intro?.message}
+            </FormText>
+          </Row>
+        )}
         <Row>
           <Col xs={12} lg={4}>
             <Form.Label className="mt-1">Release year</Form.Label>

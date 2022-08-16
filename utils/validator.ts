@@ -93,8 +93,8 @@ export const AddNewMovieValidator = yup.object({
   intro: yup
     .string()
     .required(ValidationMessages.MOVIE_INTRO_IS_REQUIRED)
-    .min(20, ValidationMessages.MOVIE_INTRO_LENGTH )
-    .max(500,ValidationMessages.MOVIE_INTRO_LENGTH ),
+    .min(20, ValidationMessages.MOVIE_INTRO_LENGTH)
+    .max(500, ValidationMessages.MOVIE_INTRO_LENGTH),
   rating: yup
     .number()
     .max(5, { message: ValidationMessages.MOVIE_RATING_ERROR })

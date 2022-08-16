@@ -24,7 +24,6 @@ const PerPage: FC<PerPageProps> = ({
           <Form.Select
             size={size}
             name="per-page"
-            defaultValue={selections[0]}
             value={perPageSelected}
             onChange={onSelect}
           >

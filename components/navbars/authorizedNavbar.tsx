@@ -15,8 +15,8 @@ const AuthorizedNavbar: FC = () => {
       <Navbar variant="dark" className="bg-dark">
         <Container fluid className="m-0 w-100">
           <Navbar.Brand
-            href="/movies"
-            className="fw-bold text-light text-decoration-none"
+            onClick={() => router.push("/movies")}
+            className="fw-bold text-light text-decoration-none cursor-pointer"
           >
             MMDB
           </Navbar.Brand>
