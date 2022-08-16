@@ -12,7 +12,7 @@ import {
 } from "../../store/features/movies/searchMoviesSlice";
 
 const Filter: FC = () => {
-  const [expanded, setExpanded] = useState<boolean>(false);
+  const [expanded, setExpanded] = useState<boolean>(true);
   const movieReleaseStartingYear = 1895;
   const movieReleaseEndYear = new Date().getFullYear();
   const dispatch = useAppDispatch();

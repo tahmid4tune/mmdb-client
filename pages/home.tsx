@@ -19,36 +19,35 @@ import {
   SortTypeEnum,
 } from "../store/features/movies/enums";
 import {
+  getMovieListRequest,
   setOrder,
   setPage,
   setPerPage,
   setSortByProperty,
 } from "../store/features/movies/searchMoviesSlice";
+import { API_CALL_STATUS } from "../utils/api-call-states";
 import { API_USER } from "../utils/api-urls";
 
 const Home: PageWithLayout = () => {
   const { auth } = useAuth() as any;
   const router = useRouter();
+  
   const axiosAuthorized = useAxiosAuthorized();
 
   const dispatch = useAppDispatch();
-  const { sortByProperty, order, page, perPage } = useAppSelector(
+  const { name, releaseYear, maxRating, minRating, sortByProperty, order, page, perPage, totalNumberOfMovies, movieSearchStatus, movieSearchError } = useAppSelector(
     (state) => state.searchMovie
   );
-
-  const getOwnInfo = async () => {
-    const data = await axiosAuthorized.get(`${API_USER}/own-info`);
-    console.log(data);
-  };
 
   useEffect(() => {
     if (!auth.user) {
       router.push("/login");
     }
+    dispatch(getMovieListRequest(null))
     return () => {};
-  }, [auth]);
+  }, [auth, name, releaseYear, maxRating, minRating, sortByProperty, order, page, perPage]);
 
-  return (
+  return movieSearchStatus == API_CALL_STATUS.PENDING ? <><PageLoader /></> : (
     <>
       <Head>
         <title>Movie list</title>
@@ -71,10 +70,10 @@ const Home: PageWithLayout = () => {
         <Col lg={3} xs={0}></Col>
         <Col lg={2} xs={12}>
         <PerPage onSelect={(e: ChangeEvent<HTMLSelectElement>) =>
-          dispatch(setPerPage(parseInt(e.target.value)))} selections={[5, 10, 20, 50, 100, 500]} size={"sm"} perPageSelected={perPage} />
+          dispatch(setPerPage(parseInt(e.target.value)))} selections={[10, 20, 50, 100, 500]} size={"sm"} perPageSelected={perPage} />
         </Col>
         <Col lg={7} xs={12}>
-          <PaginationBasic size="sm" activePage={page} perPage={perPage} totalRecords={100} onPageSelect={(e) =>
+          <PaginationBasic size="sm" activePage={page} perPage={perPage} totalRecords={totalNumberOfMovies} onPageSelect={(e) =>
           dispatch(setPage(parseInt((e.target as any).innerHTML)))
         } />
         </Col>

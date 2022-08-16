@@ -17,8 +17,7 @@ const PaginationBasic: FC<PaginationProps> = ({
   perPage,
 }) => {
   let items = [];
-  const numberOfPages = totalRecords/perPage
-  if (totalRecords/perPage > 1) {
+  const numberOfPages = Math.ceil(totalRecords/perPage)
     for (let pageNo = 1; pageNo <= numberOfPages; pageNo++) {
       items.push(
         <Pagination.Item
@@ -30,7 +29,7 @@ const PaginationBasic: FC<PaginationProps> = ({
         </Pagination.Item>
       );
     }
-  }
+  
   return (
     <>
       <Pagination className="flex-wrap" size={size}>{items}</Pagination>      

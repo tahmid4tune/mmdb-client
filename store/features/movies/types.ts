@@ -20,4 +20,15 @@ export interface InitialFilterAndResultState {
   order: SortTypeEnum;
   page: number;
   perPage: number;
+  movieSearchError: string | undefined;
+  movieSearchStatus: API_CALL_STATUS;
+  movieList: MovieDataForList[];
+  totalNumberOfMovies: number;
+}
+
+export interface MovieDataForList {
+  id: number,
+  name: string;
+  releaseYear: number;
+  averageRating: number;
 }

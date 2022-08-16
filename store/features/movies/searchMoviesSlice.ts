@@ -1,4 +1,8 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../..";
+import { axiosAuthorized } from "../../../lib/axios";
+import { API_CALL_STATUS } from "../../../utils/api-call-states";
+import { API_MOVIES } from "../../../utils/api-urls";
 import { SortByPropertyEnum, SortTypeEnum } from "./enums";
 import { InitialFilterAndResultState } from "./types";
 
@@ -11,7 +15,37 @@ const initialState: InitialFilterAndResultState = {
   order: SortTypeEnum.DESC,
   page: 1,
   perPage: 10,
+  movieSearchError: undefined,
+  movieSearchStatus: API_CALL_STATUS.IDLE,
+  movieList: [],
+  totalNumberOfMovies: 0,
 };
+
+export const getMovieListRequest = createAsyncThunk(
+  'search/getMovieList',
+  async (searchParams: any,{ getState, rejectWithValue }) => {
+    const searchMovieState: InitialFilterAndResultState = (getState() as RootState).searchMovie
+    try {
+      const { data } = await axiosAuthorized.post(`${API_MOVIES}/search`, {
+          page: searchMovieState.page,
+          perPage: searchMovieState.perPage,
+          sortByProperty: searchMovieState.sortByProperty,
+          order: searchMovieState.order,
+          ...(searchMovieState.name && {name: searchMovieState.name}),
+          ...(searchMovieState.releaseYear != 0 && {releaseYear: searchMovieState.releaseYear}),
+          ...(searchMovieState.minRating != 0 && { minRating: searchMovieState.minRating}),
+          ...(searchMovieState.maxRating != 0 && { maxRating: searchMovieState.maxRating}),
+      })
+      console.log(data)
+      return data;      
+    } catch (error) {
+      console.log(error)
+      if (!error?.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  })
 
 export const searchMoviesSlice = createSlice({
   name: "searchMovie",
@@ -51,8 +85,23 @@ export const searchMoviesSlice = createSlice({
       state.page = 1;
       state.perPage = 10;
     },
+    setMovieSearchStatus: (state, action: PayloadAction<API_CALL_STATUS>) => {
+      state.movieSearchStatus = action.payload;
+    }
   },
-  extraReducers: (builder) => {},
+  extraReducers: (builder) => {
+    builder.addCase(getMovieListRequest.pending, (state) => {
+      state.movieSearchStatus = API_CALL_STATUS.PENDING
+    }),
+    builder.addCase(getMovieListRequest.fulfilled, (state, action) => {
+      console.log(action.payload)
+      state.movieList = action.payload.resultForThisPage;
+      state.totalNumberOfMovies = action.payload.total;
+      state.movieSearchStatus = API_CALL_STATUS.SUCCESS
+    }),builder.addCase(getMovieListRequest.rejected, (state) => {
+      state.movieSearchStatus = API_CALL_STATUS.FAILED
+    })
+  },
 });
 
 export const {
