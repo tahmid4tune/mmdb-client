@@ -4,10 +4,7 @@ import { useAppSelector } from "../../lib/hooks/useAppSelector";
 import { MovieDataForList } from "../../store/features/movies/types";
 
 const MovieList: FC = () => {
-
-  const { movieList } = useAppSelector(
-    (state) => state.searchMovie
-  );
+  const { movieList } = useAppSelector((state) => state.searchMovie);
 
   return (
     <>
@@ -22,9 +19,8 @@ const MovieList: FC = () => {
           </tr>
         </thead>
         <tbody>
-        {
-          (movieList as MovieDataForList[]).map((movieData: MovieDataForList, index) => 
-            (
+          {(movieList as MovieDataForList[]).map(
+            (movieData: MovieDataForList, index) => (
               <tr>
                 <td>{index + 1}</td>
                 <td>{movieData.name}</td>
@@ -33,8 +29,7 @@ const MovieList: FC = () => {
                 <td>1</td>
               </tr>
             )
-          )
-        }
+          )}
         </tbody>
       </Table>
     </>

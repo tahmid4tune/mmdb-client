@@ -8,5 +8,4 @@ export default axios.create({
 export const axiosAuthorized: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
   headers: { "Content-Type": "application/json" },
-  data: {},
 });

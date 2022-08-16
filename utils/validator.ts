@@ -10,6 +10,14 @@ export enum ValidationMessages {
   PASSWORD_ALPHA_NUM_MISMATCH = "Password should be alphanumeric",
   PASSWORD_SUGGESTION = "Password should be 8-20 characters long and must be alphanumeric",
   PASSWORD_RETYPE_ERROR = "Passwords do not match",
+  MOVIE_NAME_IS_REQUIRED = "Movie name is required",
+  MOVIE_NAME_LENGTH_ERROR = "Movie name should not exceed 40 characters",
+  MOVIE_REL_YEAR_IS_REQUIRED = "Movie release year is required",
+  MOVIE_REL_YEAR_MIN = "Movie release year should not be before 1895",
+  MOVIE_REL_YEAR_MAX = "Movies from future are not allowed",
+  MOVIE_INTRO_IS_REQUIRED = "Please insert short story of the movie",
+  MOVIE_INTRO_LENGTH = "Movie intro should be at lease 20 characters and not bigger than 500 characters",
+  MOVIE_RATING_ERROR = "Please give a rating between 1 to 5",
 }
 
 export const onlyalphaNumericRegex = /^(?![0-9]*$)(?![a-zA-Z]*$)[a-zA-Z0-9]+$/;
@@ -60,4 +68,35 @@ export const registrationValidator = yup.object({
       [yup.ref("password"), null],
       ValidationMessages.PASSWORD_RETYPE_ERROR
     ),
+});
+
+/* Add New Movie Validation */
+export type MovieAddForm = {
+  name: string;
+  releaseYear: number;
+  intro: string;
+  rating: number;
+};
+
+export const AddNewMovieValidator = yup.object({
+  name: yup
+    .string()
+    .required(ValidationMessages.MOVIE_NAME_IS_REQUIRED)
+    .max(40, ValidationMessages.MOVIE_NAME_LENGTH_ERROR),
+  releaseYear: yup
+    .number()
+    .required(ValidationMessages.MOVIE_REL_YEAR_IS_REQUIRED)
+    .min(1895, { message: ValidationMessages.MOVIE_REL_YEAR_MIN })
+    .max(new Date().getFullYear(), {
+      message: ValidationMessages.MOVIE_REL_YEAR_MAX,
+    }),
+  intro: yup
+    .string()
+    .required(ValidationMessages.MOVIE_INTRO_IS_REQUIRED)
+    .min(20, ValidationMessages.MOVIE_INTRO_LENGTH )
+    .max(500,ValidationMessages.MOVIE_INTRO_LENGTH ),
+  rating: yup
+    .number()
+    .max(5, { message: ValidationMessages.MOVIE_RATING_ERROR })
+    .min(1, { message: ValidationMessages.MOVIE_RATING_ERROR }),
 });

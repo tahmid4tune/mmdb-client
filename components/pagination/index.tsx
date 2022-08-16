@@ -17,22 +17,24 @@ const PaginationBasic: FC<PaginationProps> = ({
   perPage,
 }) => {
   let items = [];
-  const numberOfPages = Math.ceil(totalRecords/perPage)
-    for (let pageNo = 1; pageNo <= numberOfPages; pageNo++) {
-      items.push(
-        <Pagination.Item
-          key={pageNo}
-          active={pageNo === activePage}
-          onClick={onPageSelect}
-        >
-          {pageNo}
-        </Pagination.Item>
-      );
-    }
-  
+  const numberOfPages = Math.ceil(totalRecords / perPage);
+  for (let pageNo = 1; pageNo <= numberOfPages; pageNo++) {
+    items.push(
+      <Pagination.Item
+        key={pageNo}
+        active={pageNo === activePage}
+        onClick={onPageSelect}
+      >
+        {pageNo}
+      </Pagination.Item>
+    );
+  }
+
   return (
     <>
-      <Pagination className="flex-wrap" size={size}>{items}</Pagination>      
+      <Pagination className="flex-wrap" size={size}>
+        {items}
+      </Pagination>
     </>
   );
 };

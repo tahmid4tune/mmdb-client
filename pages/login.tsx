@@ -47,7 +47,7 @@ const Login: PageWithLayout = () => {
       );
       const { accessToken, refreshToken, user } = response.data;
       setAuth({ accessToken, refreshToken, user });
-      router.push("/home");
+      router.push("/movies");
     } catch (error: any) {
       let message = error?.message;
       if (error.code == "ERR_BAD_REQUEST" || error.response.status == 404) {

@@ -27,7 +27,7 @@ export interface InitialFilterAndResultState {
 }
 
 export interface MovieDataForList {
-  id: number,
+  id: number;
   name: string;
   releaseYear: number;
   averageRating: number;

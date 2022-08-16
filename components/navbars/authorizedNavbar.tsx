@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { FC } from "react";
-import { Navbar, Container, Button } from "react-bootstrap";
+import { Navbar, Container, Button, Nav, NavDropdown } from "react-bootstrap";
 import useAuth from "../../lib/hooks/useAuth";
 
 const AuthorizedNavbar: FC = () => {
@@ -15,11 +15,16 @@ const AuthorizedNavbar: FC = () => {
       <Navbar variant="dark" className="bg-dark">
         <Container fluid className="m-0 w-100">
           <Navbar.Brand
-            href="/"
+            href="/movies"
             className="fw-bold text-light text-decoration-none"
           >
             MMDB
           </Navbar.Brand>
+          <NavDropdown title="Movie" className="me-auto text-white">
+            <NavDropdown.Item onClick={() => router.push("/movies/add")}>
+              Add New
+            </NavDropdown.Item>
+          </NavDropdown>
           <Button className="float-end" variant="danger" onClick={logout}>
             Logout
           </Button>
