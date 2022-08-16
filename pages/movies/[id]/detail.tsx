@@ -52,7 +52,7 @@ const movieDetail: PageWithLayout = () => {
   const deleteMovie = async () => {
     try {
       setPendingDelete(true);
-      await axiosAuthorized.delete(`${API_MOVIES}/delete/${id}`);
+      await axiosAuthorized.delete(`${API_MOVIES}/${id}`);
       router.push("/movies");
     } catch (error) {
     } finally {

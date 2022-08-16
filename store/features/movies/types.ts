@@ -45,6 +45,10 @@ export interface MovieDataForList {
   averageRating: number;
 }
 
+export interface MovieDataForDetail extends MovieDataForList {
+  intro: string;
+}
+
 export interface RatingUpdate {
   userRating: number;
   averageRating: number;

@@ -100,3 +100,29 @@ export const AddNewMovieValidator = yup.object({
     .max(5, { message: ValidationMessages.MOVIE_RATING_ERROR })
     .min(1, { message: ValidationMessages.MOVIE_RATING_ERROR }),
 });
+
+/* Movie edit validation */
+export type MovieEditForm = {
+  name: string;
+  releaseYear: number;
+  intro: string;
+}
+
+export const EditMovieValidator = yup.object({
+  name: yup
+    .string()
+    .required(ValidationMessages.MOVIE_NAME_IS_REQUIRED)
+    .max(40, ValidationMessages.MOVIE_NAME_LENGTH_ERROR),
+  releaseYear: yup
+    .number()
+    .required(ValidationMessages.MOVIE_REL_YEAR_IS_REQUIRED)
+    .min(1895, { message: ValidationMessages.MOVIE_REL_YEAR_MIN })
+    .max(new Date().getFullYear(), {
+      message: ValidationMessages.MOVIE_REL_YEAR_MAX,
+    }),
+  intro: yup
+    .string()
+    .required(ValidationMessages.MOVIE_INTRO_IS_REQUIRED)
+    .min(20, ValidationMessages.MOVIE_INTRO_LENGTH)
+    .max(500, ValidationMessages.MOVIE_INTRO_LENGTH),
+});
