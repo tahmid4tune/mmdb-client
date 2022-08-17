@@ -11,12 +11,15 @@ const useAxiosAuthorized = () => {
     const requestIntercept = axiosAuthorized.interceptors.request.use(
       (config) => {
         if (!config.headers["Authorization"]) {
-          console.log(config.headers);
           if (auth?.accessToken) {
             typeof window &&
-              localStorage.setItem(`mmdb_access_token`, auth?.accessToken);
+            localStorage.setItem(`mmdb_access_token`, auth?.accessToken);
+            localStorage.setItem(`mmdb_refresh_token`, auth?.refreshToken);
+            localStorage.setItem(`mmdb_user`, JSON.stringify(auth?.user));
           } else {
             auth.accessToken = localStorage.getItem(`mmdb_access_token`);
+            auth.refreshToken = localStorage.getItem(`mmdb_refresh_token`);
+            auth.user = JSON.parse(localStorage.getItem(`mmdb_user`));
           }
           config.headers["Authorization"] = `Bearer ${auth?.accessToken}`;
         }

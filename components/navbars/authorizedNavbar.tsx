@@ -8,6 +8,7 @@ const AuthorizedNavbar: FC = () => {
   const { setAuth } = useContext(AuthContext) as any;
   const auth = useAuth();
   const router = useRouter();
+  const userName = auth?.user?.name || JSON.parse(localStorage.getItem(`mmdb_user`)).name;
   const logout = () => {
     router.push("/login");
     localStorage.setItem(`mmdb_access_token`, null);
@@ -38,9 +39,12 @@ const AuthorizedNavbar: FC = () => {
               Add New
             </NavDropdown.Item>
           </NavDropdown>
-          <Button className="float-end" variant="danger" onClick={logout}>
+          <div className="float-end">
+          {userName && <span className="mr-5 text-white">Welcome {userName} </span> }
+          <Button className="ml-5" variant="danger" onClick={logout}>
             Logout
           </Button>
+          </div>
         </Container>
       </Navbar>
     </>
