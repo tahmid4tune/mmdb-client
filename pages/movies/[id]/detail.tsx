@@ -17,12 +17,16 @@ import {
 import { API_CALL_STATUS } from "../../../utils/api-call-states";
 import { API_MOVIES, API_RATING } from "../../../utils/api-urls";
 import { RatingUpdate } from "../../../store/features/movies/types";
+import { useToastAlert } from "../../../lib/hooks/useToastAlert";
+import { EXCEPTION_MESSAGES } from "../../../utils/exception-messages";
+import ToastAlert from "../../../components/toast-alert";
 
 const movieDetail: PageWithLayout = () => {
-  const { auth } = useAuth() as any;
+  const auth = useAuth();
   const router = useRouter();
   const { id } = router.query;
   const axiosAuthorized = useAxiosAuthorized();
+  const [toastAlert, showToast] = useToastAlert();
   const {
     name,
     movieDetailStatus,
@@ -40,9 +44,6 @@ const movieDetail: PageWithLayout = () => {
     useState<boolean>(false);
 
   useEffect(() => {
-    if (!auth.user) {
-      router.push("/login");
-    }
     if (id) {
       dispatch(movieDetailRequest(parseInt(id as string)));
     }
@@ -55,6 +56,11 @@ const movieDetail: PageWithLayout = () => {
       await axiosAuthorized.delete(`${API_MOVIES}/${id}`);
       router.push("/movies");
     } catch (error) {
+      showToast({
+        visible: true,
+        variant: "danger",
+        message: error?.message || EXCEPTION_MESSAGES.SOMETHING_WENT_WRONG,
+      });
     } finally {
       setPendingDelete(false);
     }
@@ -135,12 +141,19 @@ const movieDetail: PageWithLayout = () => {
           <StarRating
             onRatingSelect={(rating) => updateRating(rating)}
             loading={pendingRatingUpdate}
-            allowHoverEffect={false}
             value={ratingByUser}
             ratingLabel="Your rating"
           />
         </Col>
       </Row>
+      <ToastAlert
+        message={toastAlert.message}
+        variant={toastAlert.variant}
+        visible={toastAlert.visible}
+        onClose={() => {
+          showToast({ visible: !toastAlert.visible });
+        }}
+      />
     </>
   );
 };

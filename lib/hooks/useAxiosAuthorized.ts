@@ -5,12 +5,19 @@ import useAuth from "./useAuth";
 
 const useAxiosAuthorized = () => {
   const refresh = useRefreshToken();
-  const { auth } = useAuth() as any;
+  const auth = useAuth();
 
   useEffect(() => {
     const requestIntercept = axiosAuthorized.interceptors.request.use(
       (config) => {
         if (!config.headers["Authorization"]) {
+          console.log(config.headers);
+          if (auth?.accessToken) {
+            typeof window &&
+              localStorage.setItem(`mmdb_access_token`, auth?.accessToken);
+          } else {
+            auth.accessToken = localStorage.getItem(`mmdb_access_token`);
+          }
           config.headers["Authorization"] = `Bearer ${auth?.accessToken}`;
         }
         return config;
@@ -22,11 +29,12 @@ const useAxiosAuthorized = () => {
       (response) => response,
       async (error) => {
         const prevRequest = error?.config;
-        console.log("Response intercepted: ", prevRequest);
         if (error?.response?.status === 401 && !prevRequest?.sent) {
           prevRequest.sent = true;
           const newAccessToken = await refresh();
           prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+          typeof window &&
+            localStorage.setItem(`mmdb_access_token`, newAccessToken);
           return axiosAuthorized(prevRequest);
         }
         return Promise.reject(error);

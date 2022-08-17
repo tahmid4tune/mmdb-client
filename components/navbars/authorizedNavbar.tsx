@@ -1,15 +1,28 @@
 import { useRouter } from "next/router";
-import { FC } from "react";
+import { FC, useContext, useEffect } from "react";
 import { Navbar, Container, Button, Nav, NavDropdown } from "react-bootstrap";
+import AuthContext from "../../context/AuthProvider";
 import useAuth from "../../lib/hooks/useAuth";
 
 const AuthorizedNavbar: FC = () => {
-  const { setAuth } = useAuth() as any;
+  const { setAuth } = useContext(AuthContext) as any;
+  const auth = useAuth();
   const router = useRouter();
   const logout = () => {
-    setAuth({});
     router.push("/login");
+    localStorage.setItem(`mmdb_access_token`, null);
+    setAuth({});
   };
+
+  useEffect(() => {
+    if (typeof window) {
+      if (!auth.user && !localStorage.getItem(`mmdb_access_token`)) {
+        router.push("/login");
+      }
+    }
+    return () => {};
+  });
+
   return (
     <>
       <Navbar variant="dark" className="bg-dark">

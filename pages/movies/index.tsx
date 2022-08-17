@@ -1,7 +1,6 @@
 import Head from "next/head";
-import { useRouter } from "next/router";
-import { ChangeEvent, MouseEventHandler, useEffect, useState } from "react";
-import { Button, Col, Row } from "react-bootstrap";
+import { ChangeEvent, useEffect } from "react";
+import { Col, Row } from "react-bootstrap";
 import Filter from "../../components/filter";
 import InsideAppLayout from "../../components/layouts/insideAppLayout";
 import PageLoader from "../../components/loader/pageLoader";
@@ -9,10 +8,12 @@ import MovieList from "../../components/movie-list";
 import PaginationBasic from "../../components/pagination";
 import PerPage from "../../components/pagination/per-page";
 import Sort from "../../components/sort";
+import ToastAlert from "../../components/toast-alert";
 import { useAppDispatch } from "../../lib/hooks/useAppDispatch";
 import { useAppSelector } from "../../lib/hooks/useAppSelector";
 import useAuth from "../../lib/hooks/useAuth";
 import useAxiosAuthorized from "../../lib/hooks/useAxiosAuthorized";
+import { useToastAlert } from "../../lib/hooks/useToastAlert";
 import { PageWithLayout } from "../../lib/layoutTypes";
 import {
   SortByPropertyEnum,
@@ -20,18 +21,20 @@ import {
 } from "../../store/features/movies/enums";
 import {
   getMovieListRequest,
+  setMovieSearchStatus,
   setOrder,
   setPage,
   setPerPage,
   setSortByProperty,
 } from "../../store/features/movies/searchMoviesSlice";
 import { API_CALL_STATUS } from "../../utils/api-call-states";
-import { API_USER } from "../../utils/api-urls";
+import { EXCEPTION_MESSAGES } from "../../utils/exception-messages";
 
 const Home: PageWithLayout = () => {
-  const { auth } = useAuth() as any;
-  const router = useRouter();
+  const auth = useAuth();
   useAxiosAuthorized();
+
+  const [toastAlert, showToast] = useToastAlert();
 
   const dispatch = useAppDispatch();
   const {
@@ -49,9 +52,6 @@ const Home: PageWithLayout = () => {
   } = useAppSelector((state) => state.searchMovie);
 
   useEffect(() => {
-    if (!auth.user) {
-      router.push("/login");
-    }
     dispatch(getMovieListRequest(null));
     return () => {};
   }, [
@@ -66,11 +66,27 @@ const Home: PageWithLayout = () => {
     perPage,
   ]);
 
-  return movieSearchStatus == API_CALL_STATUS.PENDING ? (
-    <>
-      <PageLoader />
-    </>
-  ) : (
+  useEffect(() => {
+    if (movieSearchStatus === API_CALL_STATUS.IDLE) return;
+    switch (movieSearchStatus) {
+      case API_CALL_STATUS.FAILED:
+        showToast({
+          visible: true,
+          variant: "danger",
+          message: movieSearchError || EXCEPTION_MESSAGES.SOMETHING_WENT_WRONG,
+        });
+        dispatch(setMovieSearchStatus(API_CALL_STATUS.IDLE));
+        break;
+      case API_CALL_STATUS.SUCCESS:
+        dispatch(setMovieSearchStatus(API_CALL_STATUS.IDLE));
+        break;
+      default:
+        return;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [movieSearchStatus]);
+
+  return (
     <>
       <Head>
         <title>Movie list</title>
@@ -88,7 +104,11 @@ const Home: PageWithLayout = () => {
         sortTypeValue={order}
         size="sm"
       />
-      <MovieList />
+      {movieSearchStatus == API_CALL_STATUS.PENDING ? (
+        <PageLoader />
+      ) : (
+        <MovieList />
+      )}
       <Row>
         <Col lg={3} xs={0}></Col>
         <Col lg={2} xs={12}>
@@ -114,6 +134,15 @@ const Home: PageWithLayout = () => {
         </Col>
         <Col lg={0} xs={0}></Col>
       </Row>
+
+      <ToastAlert
+        message={toastAlert.message}
+        variant={toastAlert.variant}
+        visible={toastAlert.visible}
+        onClose={() => {
+          showToast({ visible: !toastAlert.visible });
+        }}
+      />
     </>
   );
 };

@@ -106,7 +106,7 @@ export type MovieEditForm = {
   name: string;
   releaseYear: number;
   intro: string;
-}
+};
 
 export const EditMovieValidator = yup.object({
   name: yup
