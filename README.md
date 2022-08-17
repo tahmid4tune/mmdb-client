@@ -7,7 +7,7 @@ The back-end of this application can be found in following repository:
 
 ### HOW TO RUN
 After downloading the code, go to the root directory of the project. 
-Copy all content of env.local.example file and paste them into a new (newly created) file named .env.local
+Copy all content of ```env.local.example``` file and paste them into a new (newly created) file named ```.env.local```
 Execute following command to resolve the dependencies mentioned in package.json file.
 
 ```
