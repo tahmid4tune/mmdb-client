@@ -82,10 +82,7 @@ const Filter: FC = () => {
                         )
                       }
                     >
-                      <option key="Select" value={0}>
-                        --Select--
-                      </option>
-                      {Array.from({ length: 5 }, (_, i) => i + 1).map(
+                      {Array.from({ length: 6 }, (_, i) => i).map(
                         (minRating) => (
                           <option key={minRating} value={minRating}>
                             {minRating}
@@ -107,10 +104,7 @@ const Filter: FC = () => {
                         )
                       }
                     >
-                      <option key="Select" value={0}>
-                        --Select--
-                      </option>
-                      {Array.from({ length: 5 }, (_, i) => i + 1).map(
+                      {Array.from({ length: 6 }, (_, i) => i).map(
                         (maxRating) => (
                           <option key={maxRating} value={maxRating}>
                             {maxRating}

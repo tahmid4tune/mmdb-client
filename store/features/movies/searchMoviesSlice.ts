@@ -9,7 +9,7 @@ import { InitialFilterAndResultState } from "./types";
 const initialState: InitialFilterAndResultState = {
   name: "",
   releaseYear: 0,
-  maxRating: 0,
+  maxRating: 5,
   minRating: 0,
   sortByProperty: SortByPropertyEnum.NAME,
   order: SortTypeEnum.DESC,
