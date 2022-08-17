@@ -1,5 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { MovieDataForDetail, MovieDataForList, MovieDetailState, RatingUpdate } from "./types";
+import {
+  MovieDataForDetail,
+  MovieDataForList,
+  MovieDetailState,
+  RatingUpdate,
+} from "./types";
 import { API_CALL_STATUS } from "../../../utils/api-call-states";
 import { axiosAuthorized } from "../../../lib/axios";
 import { API_MOVIES } from "../../../utils/api-urls";
@@ -47,10 +52,10 @@ export const movieDetailSlice = createSlice({
     },
     setUpdatedMovieData: (state, action: PayloadAction<MovieDataForDetail>) => {
       state.averageRating = action.payload.averageRating;
-      state.intro = action.payload.intro
+      state.intro = action.payload.intro;
       state.name = action.payload.name;
       state.releaseYear = action.payload.releaseYear;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(movieDetailRequest.pending, (state) => {
@@ -79,7 +84,10 @@ export const movieDetailSlice = createSlice({
   },
 });
 
-export const { setMovieDetailFetchStatus, setUpdatedRating, setUpdatedMovieData } =
-  movieDetailSlice.actions;
+export const {
+  setMovieDetailFetchStatus,
+  setUpdatedRating,
+  setUpdatedMovieData,
+} = movieDetailSlice.actions;
 
 export default movieDetailSlice.reducer;

@@ -14,70 +14,81 @@ import InputText from "../../../components/fields/InputText";
 import { except } from "../../../utils/helper";
 import { API_MOVIES, API_RATING } from "../../../utils/api-urls";
 import StarRating from "../../../components/star-rating";
-import { MovieDataForDetail, RatingUpdate } from "../../../store/features/movies/types";
-import { setUpdatedMovieData, setUpdatedRating } from "../../../store/features/movies/movieDetailSlice";
+import {
+  MovieDataForDetail,
+  RatingUpdate,
+} from "../../../store/features/movies/types";
+import {
+  setUpdatedMovieData,
+  setUpdatedRating,
+} from "../../../store/features/movies/movieDetailSlice";
 import { MovieEditForm, EditMovieValidator } from "../../../utils/validator";
+import { useToastAlert } from "../../../lib/hooks/useToastAlert";
+import { EXCEPTION_MESSAGES } from "../../../utils/exception-messages";
+import ToastAlert from "../../../components/toast-alert";
 
 const EditMovieDetail: PageWithLayout = () => {
-    const auth = useAuth();
-    const axiosAuthorized = useAxiosAuthorized();
-    const router = useRouter();
-    const { id } = router.query;
-    const formRef = useRef(null);
-    const {
-        name,
-        movieDetailStatus,
-        deleteOption,
-        editOption,
-        intro,
-        averageRating,
-        releaseYear,
-        ratingByUser,
-      } = useAppSelector((state) => state.movieDetail);
-      const dispatch = useAppDispatch();
-      const movieReleaseStartingYear = 1895;
-      const movieReleaseEndYear = new Date().getFullYear();
-      const [pendingRatingUpdate, setPendingRatingUpdate] =
-    useState<boolean>(false);
-    const [pendingUpdate, setPendingUpdate] = useState<boolean>(false);
+  const auth = useAuth();
+  const axiosAuthorized = useAxiosAuthorized();
+  const router = useRouter();
+  const { id } = router.query;
+  const formRef = useRef(null);
 
-      const {
-        register,
-        handleSubmit,
-        formState: { errors, dirtyFields },
-      } = useForm<MovieEditForm>({
-        mode: "onChange",
-        resolver: yupResolver(EditMovieValidator),
+  const [toastAlert, showToast] = useToastAlert();
+  const { name, intro, releaseYear, ratingByUser } = useAppSelector(
+    (state) => state.movieDetail
+  );
+  const dispatch = useAppDispatch();
+  const movieReleaseStartingYear = 1895;
+  const movieReleaseEndYear = new Date().getFullYear();
+  const [pendingRatingUpdate, setPendingRatingUpdate] =
+    useState<boolean>(false);
+  const [pendingUpdate, setPendingUpdate] = useState<boolean>(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, dirtyFields },
+  } = useForm<MovieEditForm>({
+    mode: "onChange",
+    resolver: yupResolver(EditMovieValidator),
+  });
+  const onSubmit = async (editData: MovieEditForm) => {
+    setPendingUpdate(true);
+    try {
+      const { data } = await axiosAuthorized.patch(
+        `${API_MOVIES}/${id}`,
+        editData
+      );
+      dispatch(setUpdatedMovieData(data as MovieDataForDetail));
+      router.back();
+    } catch (error: any) {
+      showToast({
+        visible: true,
+        variant: "danger",
+        message: error?.message || EXCEPTION_MESSAGES.SOMETHING_WENT_WRONG,
       });
-      const onSubmit = async (editData: MovieEditForm) => {
-        setPendingUpdate(true);
-        try {
-          const { data } = await axiosAuthorized.patch(`${API_MOVIES}/${id}`, editData);
-          dispatch(setUpdatedMovieData(data as MovieDataForDetail))
-          router.back();
-        } catch (error: any) {
-          console.log(error);
-          // EXCEPTION_MESSAGES.SOMETHING_WENT_WRONG
-        } finally {
-            setPendingUpdate(false);
-        }
-      };
-      const updateRating = async (rating: number) => {
-        try {
-          setPendingRatingUpdate(true);
-          const { data } = await axiosAuthorized.post(API_RATING, {
-            rating,
-            movieId: id,
-            userId: auth.user.id,
-          });
-          dispatch(setUpdatedRating(data as RatingUpdate));
-        } catch (error) {
-        } finally {
-          setPendingRatingUpdate(false);
-        }
-      };
-    return (<>
-    <PageTitle
+    } finally {
+      setPendingUpdate(false);
+    }
+  };
+  const updateRating = async (rating: number) => {
+    try {
+      setPendingRatingUpdate(true);
+      const { data } = await axiosAuthorized.post(API_RATING, {
+        rating,
+        movieId: id,
+        userId: auth.user.id,
+      });
+      dispatch(setUpdatedRating(data as RatingUpdate));
+    } catch (error) {
+    } finally {
+      setPendingRatingUpdate(false);
+    }
+  };
+  return (
+    <>
+      <PageTitle
         title={`Edit ${name}`}
         textClassName="mt-5"
         showHorizontalBar
@@ -149,13 +160,13 @@ const EditMovieDetail: PageWithLayout = () => {
             </Form.Select>
           </Col>
           <Col xs={12} lg={4} className="mt-1">
-          <StarRating
-            onRatingSelect={(rating) => updateRating(rating)}
-            loading={pendingRatingUpdate}
-            allowHoverEffect={false}
-            value={ratingByUser}
-            ratingLabel="Your rating"
-          />
+            <StarRating
+              onRatingSelect={(rating) => updateRating(rating)}
+              loading={pendingRatingUpdate}
+              allowHoverEffect={false}
+              value={ratingByUser}
+              ratingLabel="Your rating"
+            />
           </Col>
           <Col xs={12} lg={4}>
             <Button
@@ -168,12 +179,21 @@ const EditMovieDetail: PageWithLayout = () => {
             </Button>
           </Col>
         </Row>
-        </Form>
-    </>)
-}
+      </Form>
+      <ToastAlert
+        message={toastAlert.message}
+        variant={toastAlert.variant}
+        visible={toastAlert.visible}
+        onClose={() => {
+          showToast({ visible: !toastAlert.visible });
+        }}
+      />
+    </>
+  );
+};
 
 EditMovieDetail.getPageLayout = function getPageLayout(page) {
-    return <InsideAppLayout>{page}</InsideAppLayout>;
+  return <InsideAppLayout>{page}</InsideAppLayout>;
 };
 
 export default EditMovieDetail;

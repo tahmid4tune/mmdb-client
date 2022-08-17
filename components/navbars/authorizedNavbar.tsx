@@ -10,7 +10,7 @@ const AuthorizedNavbar: FC = () => {
   const router = useRouter();
   const logout = () => {
     router.push("/login");
-    localStorage.setItem(`mmdb_access_token`, null)
+    localStorage.setItem(`mmdb_access_token`, null);
     setAuth({});
   };
 

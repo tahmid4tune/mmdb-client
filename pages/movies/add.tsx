@@ -49,9 +49,9 @@ const AddMovie: PageWithLayout = () => {
     } catch (error: any) {
       showToast({
         visible: true,
-        variant: 'danger',
+        variant: "danger",
         message: error?.message || EXCEPTION_MESSAGES.SOMETHING_WENT_WRONG,
-      })
+      });
     } finally {
       setLoading(false);
     }
@@ -150,7 +150,7 @@ const AddMovie: PageWithLayout = () => {
         variant={toastAlert.variant}
         visible={toastAlert.visible}
         onClose={() => {
-          showToast({ visible: !toastAlert.visible })
+          showToast({ visible: !toastAlert.visible });
         }}
       />
     </>

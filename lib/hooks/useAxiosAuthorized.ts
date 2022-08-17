@@ -11,11 +11,12 @@ const useAxiosAuthorized = () => {
     const requestIntercept = axiosAuthorized.interceptors.request.use(
       (config) => {
         if (!config.headers["Authorization"]) {
-          console.log(config.headers)
+          console.log(config.headers);
           if (auth?.accessToken) {
-            typeof window && localStorage.setItem(`mmdb_access_token`, auth?.accessToken)
+            typeof window &&
+              localStorage.setItem(`mmdb_access_token`, auth?.accessToken);
           } else {
-            auth.accessToken = localStorage.getItem(`mmdb_access_token`)
+            auth.accessToken = localStorage.getItem(`mmdb_access_token`);
           }
           config.headers["Authorization"] = `Bearer ${auth?.accessToken}`;
         }
@@ -32,7 +33,8 @@ const useAxiosAuthorized = () => {
           prevRequest.sent = true;
           const newAccessToken = await refresh();
           prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-          typeof window && localStorage.setItem(`mmdb_access_token`, newAccessToken);
+          typeof window &&
+            localStorage.setItem(`mmdb_access_token`, newAccessToken);
           return axiosAuthorized(prevRequest);
         }
         return Promise.reject(error);

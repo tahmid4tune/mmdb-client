@@ -57,9 +57,9 @@ const Login: PageWithLayout = () => {
       }
       showToast({
         visible: true,
-        variant: 'danger',
+        variant: "danger",
         message: message || EXCEPTION_MESSAGES.SOMETHING_WENT_WRONG,
-      })
+      });
     } finally {
       setLoading(false);
     }

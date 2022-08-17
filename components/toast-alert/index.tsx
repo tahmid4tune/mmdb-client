@@ -1,9 +1,9 @@
-import { FC, useEffect } from 'react'
-import { Toast } from 'react-bootstrap'
-import { ToastAlertProps } from '../../lib/hooks/useToastAlert'
+import { FC, useEffect } from "react";
+import { Toast } from "react-bootstrap";
+import { ToastAlertProps } from "../../lib/hooks/useToastAlert";
 
 interface ToastWithCloseButtonProps extends ToastAlertProps {
-  onClose?: () => void
+  onClose?: () => void;
 }
 const ToastAlert: FC<ToastWithCloseButtonProps> = ({
   visible,
@@ -14,11 +14,11 @@ const ToastAlert: FC<ToastWithCloseButtonProps> = ({
   useEffect(() => {
     if (visible) {
       setTimeout(() => {
-        onClose && onClose()
-      }, 5000)
+        onClose && onClose();
+      }, 5000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible])
+  }, [visible]);
 
   return (
     <Toast
@@ -28,18 +28,16 @@ const ToastAlert: FC<ToastWithCloseButtonProps> = ({
     >
       <Toast.Body className="d-flex">
         <div className="w-100 float-start">
-          <p className={`fw-bold text-${variant} m-0 float-end`}>
-            {message}
-          </p>
+          <p className={`fw-bold text-${variant} m-0 float-end`}>{message}</p>
         </div>
       </Toast.Body>
     </Toast>
-  )
-}
+  );
+};
 
 ToastAlert.defaultProps = {
-  variant: 'primary',
+  variant: "primary",
   visible: false,
-}
+};
 
-export default ToastAlert
+export default ToastAlert;

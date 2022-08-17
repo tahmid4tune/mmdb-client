@@ -58,9 +58,9 @@ const movieDetail: PageWithLayout = () => {
     } catch (error) {
       showToast({
         visible: true,
-        variant: 'danger',
+        variant: "danger",
         message: error?.message || EXCEPTION_MESSAGES.SOMETHING_WENT_WRONG,
-      })
+      });
     } finally {
       setPendingDelete(false);
     }
@@ -152,7 +152,7 @@ const movieDetail: PageWithLayout = () => {
         variant={toastAlert.variant}
         visible={toastAlert.visible}
         onClose={() => {
-          showToast({ visible: !toastAlert.visible })
+          showToast({ visible: !toastAlert.visible });
         }}
       />
     </>

@@ -1,7 +1,6 @@
 import Head from "next/head";
-import { useRouter } from "next/router";
-import { ChangeEvent, MouseEventHandler, useEffect, useState } from "react";
-import { Button, Col, Row } from "react-bootstrap";
+import { ChangeEvent, useEffect } from "react";
+import { Col, Row } from "react-bootstrap";
 import Filter from "../../components/filter";
 import InsideAppLayout from "../../components/layouts/insideAppLayout";
 import PageLoader from "../../components/loader/pageLoader";
@@ -29,15 +28,13 @@ import {
   setSortByProperty,
 } from "../../store/features/movies/searchMoviesSlice";
 import { API_CALL_STATUS } from "../../utils/api-call-states";
-import { API_USER } from "../../utils/api-urls";
 import { EXCEPTION_MESSAGES } from "../../utils/exception-messages";
 
 const Home: PageWithLayout = () => {
   const auth = useAuth();
-  const router = useRouter();
   useAxiosAuthorized();
 
-  const [toastAlert, showToast] = useToastAlert()
+  const [toastAlert, showToast] = useToastAlert();
 
   const dispatch = useAppDispatch();
   const {
@@ -55,8 +52,8 @@ const Home: PageWithLayout = () => {
   } = useAppSelector((state) => state.searchMovie);
 
   useEffect(() => {
-      dispatch(getMovieListRequest(null));
-      return () => {};
+    dispatch(getMovieListRequest(null));
+    return () => {};
   }, [
     auth,
     name,
@@ -70,24 +67,24 @@ const Home: PageWithLayout = () => {
   ]);
 
   useEffect(() => {
-    if (movieSearchStatus === API_CALL_STATUS.IDLE) return
+    if (movieSearchStatus === API_CALL_STATUS.IDLE) return;
     switch (movieSearchStatus) {
       case API_CALL_STATUS.FAILED:
         showToast({
           visible: true,
-          variant: 'danger',
+          variant: "danger",
           message: movieSearchError || EXCEPTION_MESSAGES.SOMETHING_WENT_WRONG,
-        })
-        dispatch(setMovieSearchStatus(API_CALL_STATUS.IDLE))
-        break
+        });
+        dispatch(setMovieSearchStatus(API_CALL_STATUS.IDLE));
+        break;
       case API_CALL_STATUS.SUCCESS:
-        dispatch(setMovieSearchStatus(API_CALL_STATUS.IDLE))
-        break
+        dispatch(setMovieSearchStatus(API_CALL_STATUS.IDLE));
+        break;
       default:
-        return
+        return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [movieSearchStatus])
+  }, [movieSearchStatus]);
 
   return movieSearchStatus == API_CALL_STATUS.PENDING ? (
     <>
@@ -143,7 +140,7 @@ const Home: PageWithLayout = () => {
         variant={toastAlert.variant}
         visible={toastAlert.visible}
         onClose={() => {
-          showToast({ visible: !toastAlert.visible })
+          showToast({ visible: !toastAlert.visible });
         }}
       />
     </>
