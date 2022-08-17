@@ -14,12 +14,14 @@ import { AxiosAuthRefreshRequestConfig } from "axios-auth-refresh";
 import { EXCEPTION_MESSAGES } from "../utils/exception-messages";
 import { useRouter } from "next/router";
 import PageTitle from "../components/page-title";
-import { useState } from "react";
-import useAuth from "../lib/hooks/useAuth";
+import { useContext, useState } from "react";
+import AuthContext from "../context/AuthProvider";
+import { useToastAlert } from "../lib/hooks/useToastAlert";
 
 const Login: PageWithLayout = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { setAuth } = useAuth() as any;
+  const { setAuth } = useContext(AuthContext) as any;
+  const [toastAlert, showToast] = useToastAlert();
   const {
     register,
     handleSubmit,
@@ -52,12 +54,12 @@ const Login: PageWithLayout = () => {
       let message = error?.message;
       if (error.code == "ERR_BAD_REQUEST" || error.response.status == 404) {
         message = EXCEPTION_MESSAGES.LOGIN_ERROR;
-      } /*
-          dispatchToast({
-            show: true,
-            message: message || 'エラーが発生しました',
-            variant: 'danger',
-          })*/
+      }
+      showToast({
+        visible: true,
+        variant: 'danger',
+        message: message || EXCEPTION_MESSAGES.SOMETHING_WENT_WRONG,
+      })
     } finally {
       setLoading(false);
     }

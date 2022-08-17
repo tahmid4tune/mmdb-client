@@ -126,6 +126,7 @@ export const {
   setReleaseYear,
   setName,
   resetFilter,
+  setMovieSearchStatus,
 } = searchMoviesSlice.actions;
 
 export default searchMoviesSlice.reducer;

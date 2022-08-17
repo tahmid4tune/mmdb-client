@@ -19,7 +19,7 @@ import { setUpdatedMovieData, setUpdatedRating } from "../../../store/features/m
 import { MovieEditForm, EditMovieValidator } from "../../../utils/validator";
 
 const EditMovieDetail: PageWithLayout = () => {
-    const { auth } = useAuth() as any;
+    const auth = useAuth();
     const axiosAuthorized = useAxiosAuthorized();
     const router = useRouter();
     const { id } = router.query;

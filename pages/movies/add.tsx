@@ -8,32 +8,26 @@ import useAuth from "../../lib/hooks/useAuth";
 import { PageWithLayout } from "../../lib/layoutTypes";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { MovieAddForm, AddNewMovieValidator } from "../../utils/validator";
-import { axiosAuthorized } from "../../lib/axios";
 import { API_MOVIES } from "../../utils/api-urls";
 import InputText from "../../components/fields/InputText";
 import { except } from "../../utils/helper";
 import StarRating from "../../components/star-rating";
 import useAxiosAuthorized from "../../lib/hooks/useAxiosAuthorized";
+import { EXCEPTION_MESSAGES } from "../../utils/exception-messages";
+import { useToastAlert } from "../../lib/hooks/useToastAlert";
+import ToastAlert from "../../components/toast-alert";
 
 const AddMovie: PageWithLayout = () => {
-  const { auth } = useAuth() as any;
   const axiosAuthorized = useAxiosAuthorized();
   const router = useRouter();
   const formRef = useRef(null);
 
   const movieReleaseStartingYear = 1895;
   const movieReleaseEndYear = new Date().getFullYear();
-
+  const [toastAlert, showToast] = useToastAlert();
   const [loading, setLoading] = useState<boolean>(false);
   const [movieRating, setMovieRating] = useState<number>(0);
-  useEffect(() => {
-    if (!auth.user) {
-      router.push("/login");
-    }
-    console.log(auth);
 
-    return () => {};
-  });
   const {
     register,
     handleSubmit,
@@ -53,13 +47,15 @@ const AddMovie: PageWithLayout = () => {
       await axiosAuthorized.post(`${API_MOVIES}/add`, data);
       router.push("/movies");
     } catch (error: any) {
-      console.log(error);
-      // EXCEPTION_MESSAGES.SOMETHING_WENT_WRONG
+      showToast({
+        visible: true,
+        variant: 'danger',
+        message: error?.message || EXCEPTION_MESSAGES.SOMETHING_WENT_WRONG,
+      })
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <>
       <PageTitle
@@ -149,6 +145,14 @@ const AddMovie: PageWithLayout = () => {
           </Col>
         </Row>
       </Form>
+      <ToastAlert
+        message={toastAlert.message}
+        variant={toastAlert.variant}
+        visible={toastAlert.visible}
+        onClose={() => {
+          showToast({ visible: !toastAlert.visible })
+        }}
+      />
     </>
   );
 };
