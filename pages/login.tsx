@@ -14,8 +14,12 @@ import { AxiosAuthRefreshRequestConfig } from "axios-auth-refresh";
 import { EXCEPTION_MESSAGES } from "../utils/exception-messages";
 import { useRouter } from "next/router";
 import PageTitle from "../components/page-title";
+import { useState } from "react";
+import useAuth from "../lib/hooks/useAuth";
 
 const Login: PageWithLayout = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const { setAuth } = useAuth() as any;
   const {
     register,
     handleSubmit,
@@ -30,9 +34,10 @@ const Login: PageWithLayout = () => {
   });
   const router = useRouter();
   const onSubmit = async (data: LoginForm) => {
+    setLoading(true);
     const { email, password } = data;
     try {
-      await axios.post(
+      const response = await axios.post(
         `${API_AUTH}/login`,
         {
           email,
@@ -40,7 +45,9 @@ const Login: PageWithLayout = () => {
         },
         { skipAuthRefresh: true } as AxiosAuthRefreshRequestConfig
       );
-      router.push("/home");
+      const { accessToken, refreshToken, user } = response.data;
+      setAuth({ accessToken, refreshToken, user });
+      router.push("/movies");
     } catch (error: any) {
       let message = error?.message;
       if (error.code == "ERR_BAD_REQUEST" || error.response.status == 404) {
@@ -51,6 +58,8 @@ const Login: PageWithLayout = () => {
             message: message || 'エラーが発生しました',
             variant: 'danger',
           })*/
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -89,7 +98,12 @@ const Login: PageWithLayout = () => {
             />
           </Col>
           <Col xs={12}>
-            <Button type="submit" variant="primary" className="w-100 fw-bold">
+            <Button
+              type="submit"
+              variant="primary"
+              className="w-100 fw-bold"
+              disabled={loading}
+            >
               Login
             </Button>
           </Col>

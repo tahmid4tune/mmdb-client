@@ -7,7 +7,7 @@ const GuestNavbar: FC = () => {
       <Navbar variant="dark" className="bg-dark">
         <Container className="m-0">
           <Navbar.Brand
-            href="/"
+            href="/login"
             className="text-light text-decoration-none fw-bold"
           >
             MMDB

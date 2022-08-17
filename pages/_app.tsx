@@ -1,7 +1,6 @@
 import "../styles/global.css";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
-import { useRouter } from "next/router";
 import { PropsWithLayout } from "../lib/layoutTypes";
 import dynamic from "next/dynamic";
 import { store } from "../store";
@@ -10,7 +9,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/global.css";
 
 const App = ({ Component, pageProps }: PropsWithLayout) => {
-  const router = useRouter();
   const getPageLayout = Component.getPageLayout ?? ((page) => page);
   return (
     <>
