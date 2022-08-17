@@ -22,4 +22,4 @@ yarn dev
 
 Based on the configuration mentioned in env.local.example file, you should be able to see a login screen in following URL:
 
-http://localhost:3000
+http://localhost:3000/login
