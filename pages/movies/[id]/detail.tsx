@@ -141,7 +141,6 @@ const movieDetail: PageWithLayout = () => {
           <StarRating
             onRatingSelect={(rating) => updateRating(rating)}
             loading={pendingRatingUpdate}
-            allowHoverEffect={false}
             value={ratingByUser}
             ratingLabel="Your rating"
           />

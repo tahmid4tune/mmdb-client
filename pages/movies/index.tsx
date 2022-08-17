@@ -86,11 +86,7 @@ const Home: PageWithLayout = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [movieSearchStatus]);
 
-  return movieSearchStatus == API_CALL_STATUS.PENDING ? (
-    <>
-      <PageLoader />
-    </>
-  ) : (
+  return (
     <>
       <Head>
         <title>Movie list</title>
@@ -108,7 +104,11 @@ const Home: PageWithLayout = () => {
         sortTypeValue={order}
         size="sm"
       />
-      <MovieList />
+      {movieSearchStatus == API_CALL_STATUS.PENDING ? (
+        <PageLoader />
+      ) : (
+        <MovieList />
+      )}
       <Row>
         <Col lg={3} xs={0}></Col>
         <Col lg={2} xs={12}>
